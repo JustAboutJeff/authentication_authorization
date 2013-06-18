@@ -1,9 +1,7 @@
 get '/' do
   # render home page
-  if logged_in?
-    @users = User.all
-  end
- #TODO: Show all users if user is signed in
+  #TODO: Show all users if user is signed in
+  @users = User.all
   erb :index
 end
 
