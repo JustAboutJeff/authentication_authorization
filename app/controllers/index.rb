@@ -1,5 +1,8 @@
 get '/' do
   # render home page
+  if logged_in?
+    @users = Users.all
+  end
  #TODO: Show all users if user is signed in
   erb :index
 end
@@ -7,16 +10,21 @@ end
 #----------- SESSIONS -----------
 
 get '/sessions/new' do
-  # render sign-in page 
+  # render sign-in page
   erb :sign_in
 end
 
 post '/sessions' do
-  # sign-in
+  if user = User.authenticate(params)
+    session[:user_id] = user.id
+    redirect '/'
+  else
+    redirect '/login'
+  end
 end
 
 delete '/sessions/:id' do
-  # sign-out -- invoked via AJAX
+  session.clear
 end
 
 #----------- USERS -----------
@@ -27,5 +35,7 @@ get '/users/new' do
 end
 
 post '/users' do
-  # sign-up a new user
+  user = User.create(params[:user])
+  session[:user_id] = user.id
+  redirect '/'
 end
