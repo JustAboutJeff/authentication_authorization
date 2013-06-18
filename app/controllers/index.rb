@@ -1,7 +1,7 @@
 get '/' do
   # render home page
   if logged_in?
-    @users = Users.all
+    @users = User.all
   end
  #TODO: Show all users if user is signed in
   erb :index
@@ -19,12 +19,13 @@ post '/sessions' do
     session[:user_id] = user.id
     redirect '/'
   else
-    redirect '/login'
+    redirect '/'
   end
 end
 
 delete '/sessions/:id' do
   session.clear
+  redirect '/'
 end
 
 #----------- USERS -----------

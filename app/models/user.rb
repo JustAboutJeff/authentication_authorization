@@ -1,17 +1,18 @@
 class User < ActiveRecord::Base
+
   validates :name,     presence: true,
-                       uniqueness: true,
+                       uniqueness: true
   validates :email,    presence: true,
                        uniqueness: true,
                        format: { :with => /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\Z/i }
   validates :password_hash, presence: true
 
   def password
-    @password ||= Bcrypt::Password.new(password_hash)
+    @password ||= BCrypt::Password.new(password_hash)
   end
 
   def password=(pass)
-    @password = Bcrypt::Password.create(pass)
+    @password = BCrypt::Password.create(pass)
     self.password_hash = @password
   end
 
@@ -22,8 +23,8 @@ class User < ActiveRecord::Base
     @user
   end
 
-  def self.authenticate(params)
-    user = User.find_by_name(params[:name])
+  def self.authenticate(params={})
+    user = User.find_by_name(params[:email])
     (user && user.password == params[:password]) ? user : nil
   end
 
